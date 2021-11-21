@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Inter"), url(/fonts/Inter-Regular.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    src: local("Inter"), url(/fonts/Inter-Medium.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    src: local("Inter"),
+      url(/fonts/Inter-SemiBold.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Inter"), url(/fonts/Inter-Bold.woff2) format("woff2");
+  }
+
+
+
+
+
+
+
+
+  @font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Poppins"), url(/fonts/Poppins-Regular.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 500;
+    src: local("Poppins"), url(/fonts/Poppins-Medium.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    src: local("Poppins"),
+      url(/fonts/Poppins-SemiBold.woff2) format("woff2");
+  }
+  
+  @font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Poppins"), url(/fonts/Poppins-Bold.woff2) format("woff2");
+  }
