@@ -1,18 +1,15 @@
-const Auction = artifacts.require("Auction");
-const Store = artifacts.require("Store");
-/*
- * uncomment accounts to access the test accounts made available by the
- * Ethereum client
- * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
- */
-contract("Auction", function (accounts) {
-  it("should assert true", async function () {
-    await Auction.deployed();
-    return assert.isTrue(true);
-  });
+const truffleAssert = require("truffle-assertions");
 
-  it("can add new product", async function () {
-    let auction = await auction.deployed();
+const Auction = artifacts.require("Auction");
+
+contract("Auction", function (accounts) {
+  let auction;
+  const owner = accounts[0];
+  const bidderAccount = accounts[3];
+
+  beforeEach(async () => {
+    auction = await Auction.new({ from: owner });
+
     await auction.addProduct(
       "Nike airmax",
       "http://nike.com",
@@ -26,34 +23,63 @@ contract("Auction", function (accounts) {
     assert(products[0].name === "Nike airmax");
   });
 
-  /*   it("can bid", async function () {
-    let auction = await Auction.deployed();
-
-    await auction.addProduct(
-      "Nike airmax 2",
-      "http://nike.com",
+  it("owner can add new product", async function () {
+    const result = await auction.addProduct(
+      "Adidas",
+      "http://adidas.com",
       "New pair of shoes",
-      web3.utils.toWei("0.001", "ether"),
-      5
+      web3.utils.toWei("0.005", "ether"),
+      5,
+      { from: owner }
     );
 
-    let bidAmount = web3.utils.toWei("0.002", "ether");
+    const product = await auction.getProduct(1);
+    assert(product.name === "Adidas");
 
+    truffleAssert.eventEmitted(result, "ProductCreated", (event) => {
+      return (event.product = product);
+    });
+  });
+
+  it("random person cannot add new product", async function () {
+    await truffleAssert.reverts(
+      auction.addProduct(
+        "Adidas",
+        "http://adidas.com",
+        "New pair of shoes",
+        web3.utils.toWei("0.005", "ether"),
+        5,
+        { from: bidderAccount }
+      )
+    );
+  });
+
+  it("can bid", async function () {
+    let bidAmount = web3.utils.toWei("0.002", "ether");
     await auction.bid(0, {
-      from: accounts[2],
+      from: bidderAccount,
       value: bidAmount,
     });
 
-     const products = await auction.getProducts();
-    console.log(products);
-        const ownerAddress = await store.getProductOwner();
-    const ownerAddress2 = await store.getProductOwner();
-    const test = await auction.getProductId(accounts[2]);
-    console.log(test);
+    const product = await auction.getProduct(0);
+    assert(product.price == bidAmount);
 
-    console.log("Owner address ", ownerAddress);
-    console.log("Owner address 2 ", ownerAddress2);
-    assert.equal(ownerAddress == accounts[1]);
-    assert.equal(products[0].price == bidAmount);
-  }); */
+    const currentOwner = await auction.getProductOwner(0);
+    assert(currentOwner == bidderAccount);
+  });
+
+  it("can claim product", function () {
+    //Wait for 5 seconds after bidding
+    setTimeout(async () => {
+      await auction.claimProduct(0, {
+        from: bidderAccount,
+      });
+
+      const product = await auction.getProduct(0);
+      assert(product.isSold);
+
+      const currentOwner = await auction.getProductOwner(0);
+      assert(currentOwner == bidderAccount);
+    }, 5000);
+  });
 });

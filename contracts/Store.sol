@@ -4,7 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Store {
     address public owner;
 
-    mapping(uint256 => address) productIdToOwner;
+    mapping(uint256 => address) public productIdToOwner;
 
     mapping(uint256 => Product) products;
     uint256 totalProductCount = 0;
@@ -19,6 +19,8 @@ contract Store {
         bool isSold;
     }
 
+    event ProductCreated(Product product);
+
     constructor() {
         owner = msg.sender;
     }
@@ -26,7 +28,7 @@ contract Store {
     /***
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
-    /// @param _auctionDuration auction duration for the product (in minutes)
+    /// @param _auctionDuration auction duration for the product (in seconds)
     /// @return Documents the return variables of a contract’s function state variable
     /// @inheritdoc	Copies all missing tags from the base function (must be followed by the contract name)
  */
@@ -37,7 +39,7 @@ contract Store {
         uint256 _floorPrice,
         uint32 _auctionDuration
     ) public onlyOwner {
-        require(_auctionDuration > 0); // actionDuration must be at least 1 minute
+        require(_auctionDuration > 0); // auctionDuration must be at least 5 seconds
         uint256 expireTime = block.timestamp + _auctionDuration * 60;
         Product memory newProduct = Product(
             _name,
@@ -51,10 +53,16 @@ contract Store {
 
         products[totalProductCount] = newProduct;
         totalProductCount++;
+
+        emit ProductCreated(newProduct);
     }
 
-    function getProductOwner() external view returns (address) {
-        return productIdToOwner[0];
+    function getProductOwner(uint256 _productId)
+        external
+        view
+        returns (address)
+    {
+        return productIdToOwner[_productId];
     }
 
     function getProducts() external view returns (Product[] memory) {

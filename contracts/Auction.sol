@@ -4,8 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./Store.sol";
 
 contract Auction is Store {
-    mapping(address => uint256) ownerToProductId;
-
     event NewBid(address _from, uint256 _productId, uint256 _newPrice);
     event ProductSold(address _owner, uint256 _productId);
 
@@ -18,12 +16,7 @@ contract Auction is Store {
 
         product.price = msg.value;
         productIdToOwner[_productId] = msg.sender;
-        ownerToProductId[msg.sender] = _productId;
         emit NewBid(msg.sender, _productId, msg.value);
-    }
-
-    function getProductId(address owner) external view returns (uint256) {
-        return ownerToProductId[owner];
     }
 
     function claimProduct(uint256 _productId) external {
