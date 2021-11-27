@@ -6,10 +6,11 @@ module.exports = {
   darkMode: "class", // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: ['"Inter"', "sans-serif"],
+      sans: ['"Poppins"', "sans-serif"],
     },
     colors: {
       ...defaultColors,
+      gray: colors.trueGray,
       rose: colors.rose,
       fuchsia: colors.fuchsia,
       indigo: colors.indigo,
@@ -28,5 +29,5 @@ module.exports = {
       margin: ["first", "last"],
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
 };

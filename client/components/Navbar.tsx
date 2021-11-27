@@ -1,19 +1,18 @@
 import React from "react";
 import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
+import { getEllipsisTxt } from "../utils";
 
 const Navbar = () => {
   const { account, deactivate } = useWeb3React();
 
   let address = "-";
   if (account) {
-    address = `${account.substring(0, 6)}...${account.substring(
-      account.length - 4
-    )}`;
+    address = getEllipsisTxt(account);
   }
 
   return (
-    <div className="mb-2 shadow-lg navbar bg-neutral text-neutral-content">
+    <div className="mb-2 bg-gray-800 shadow-lg navbar text-neutral-content">
       <Link href="/">
         <div className="flex-none px-2 mx-2 cursor-pointer">
           <span className="text-lg font-bold">AuctionUI</span>
