@@ -62,13 +62,14 @@ export const BiddingDialog = ({
                 <label className=" input-group focus:outline-none focus:ring-none input-group-md">
                   <input
                     type="number"
+                    lang="en"
                     min={minBidAmount}
                     value={bidAmount}
                     onChange={(event) =>
                       setBidAmount(String(event.target.value))
                     }
                     step="0.01"
-                    className="w-full input input-lg"
+                    className="w-full input input-lg focus:ring-0"
                   />
                   <span className="text-xl text-white bg-primary ">ETH</span>
                 </label>

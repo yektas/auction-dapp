@@ -60,7 +60,6 @@ const Home: NextPage = () => {
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
-  const [web3, setWeb3] = useState<Web3>();
   useEffect(() => {
     /* getDollarsValue().then((res) => {
       setDollarValue(res.data.rates["ETH"]);
@@ -71,6 +70,7 @@ const Home: NextPage = () => {
   const onConnectWallet = async (name: ConnectorNames) => {
     setActivatingConnector(currentConnector);
     activate(connectorsByName[name]);
+    localStorage.setItem("connected", "1");
   };
 
   const currentConnector = injected;
@@ -80,25 +80,22 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <div className="container z-10 flex flex-col items-center justify-center px-6 py-16 mx-auto md:px-12 xl:py-24">
-        {!account ? (
-          <>
-            <h1 className="mb-4 text-5xl font-extrabold leading-tight text-center text-gray-800 sm:text-6xl">
-              Welcome to Auction
-            </h1>
-            <div className="w-2/5 m-auto mt-4 ">
-              <SelectWallet
-                activatingConnector={currentConnector}
-                activating={activating}
-                onClick={onConnectWallet}
-              />
-            </div>
-          </>
-        ) : (
-          <Store />
-        )}
-      </div>
-      {connected && <Link href="/auction">Go to auction</Link>}
+      {!account ? (
+        <div className="container flex flex-col items-center justify-center px-6 py-16 mx-auto md:px-12 xl:py-24">
+          <h1 className="mb-4 text-5xl font-extrabold leading-tight text-center text-gray-800 sm:text-6xl">
+            Welcome to Auction
+          </h1>
+          <div className="w-2/5 h-screen m-auto mt-4">
+            <SelectWallet
+              activatingConnector={currentConnector}
+              activating={activating}
+              onClick={onConnectWallet}
+            />
+          </div>
+        </div>
+      ) : (
+        <Store />
+      )}
     </Layout>
   );
 };

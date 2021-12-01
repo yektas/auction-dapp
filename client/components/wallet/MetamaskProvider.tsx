@@ -13,13 +13,18 @@ function MetamaskProvider({ children }: Props) {
     activate: activateNetwork,
   } = useWeb3React();
   const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     injected
       .isAuthorized()
       .then((isAuthorized) => {
-        setLoaded(true);
-        if (isAuthorized && !networkActive && !networkError) {
-          activateNetwork(injected);
+        if (localStorage.getItem("connected") === "2") {
+          setLoaded(true);
+        } else {
+          setLoaded(true);
+          if (isAuthorized && !networkActive && !networkError) {
+            activateNetwork(injected);
+          }
         }
       })
       .catch(() => {

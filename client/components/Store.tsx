@@ -4,9 +4,9 @@ import getWeb3 from "../lib/getWeb3";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import { useWeb3React } from "@web3-react/core";
-import Link from "next/link";
+import ProductCard from "./ProductCard";
 
-type Product = {
+export type Product = {
   name: string;
   description: string;
   imageLink: string;
@@ -59,51 +59,61 @@ const Store = ({}: Props) => {
       });
   }
 
-  function renderProduct(product: Product) {
-    const priceEth = Web3.utils.fromWei(product.price, "ether");
-
-    return (
-      <div className="text-center shadow-2xl bg-base-100 card">
-        <figure className="px-10 pt-10">
-          <img src={product.imageLink} className="rounded-xl" />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">{product.name}</h2>
-          <p>{product.description}</p>
-          <p>{product.id}</p>
-          <p>{product.expireTime}</p>
-          <p>{product.isSold}</p>
-          <p>
-            <img className="inline w-5 h-5 mx-1" src="/eth-logo.svg" />
-            {priceEth} ETH
-          </p>
-          <div className="justify-center card-actions">
-            <Link href={`/products/${product.id}`}>
-              <button className="btn btn-primary modal-button">Bid</button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   function isOwner() {
     return owner == account;
   }
 
   return (
     <>
-      {isOwner() && (
+      <div className="py-16 bg-gray-900 hero">
+        <div className="container px-4 mx-auto sm:px-8 lg:px-16 xl:px-20">
+          <div className="grid items-center grid-cols-1 gap-8 hero-wrapper md:grid-cols-12">
+            <div className="col-span-6 hero-text">
+              <h1 className="max-w-xl text-4xl font-bold leading-tight text-white md:text-5xl">
+                Best products are here!
+              </h1>
+              <hr className="w-12 h-1 mt-8 bg-orange-500 rounded-full " />
+              <p className="mt-8 text-base font-semibold leading-relaxed text-white ">
+                You can find your favorite products with a really good prices
+              </p>
+              <div className="flex justify-center mt-10 space-x-5 get-app md:justify-start">
+                <button className="btn btn-outline btn-primary">
+                  Browse Now
+                </button>
+              </div>
+            </div>
+
+            <div className="col-span-6 hero-image">
+              <img src="/deliveries.svg" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="divider"></div>
+
+      {/*       {isOwner() && (
         <button
           className="float-right btn btn-primary"
           onClick={() => addNewProduct()}
         >
           ADD NEW PRODUCT
         </button>
-      )}
-      <h1 className="prose-2xl ">PRODUCTS</h1>
-      <div className="grid grid-cols-3 gap-6">
-        {products.map((product: Product) => renderProduct(product))}
+      )} */}
+      <div className="container mx-auto mt-10 space-y-10">
+        <h1 className="text-3xl prose-2xl text-white">Live Auctions</h1>
+        <div className="divider"></div>
+        <div className="grid grid-cols-3 gap-10 ">
+          {products.map((product: Product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+        <h1 className="my-5 text-3xl prose-2xl text-white">Ended Auctions</h1>
+        <div className="divider"></div>
+        <div className="grid grid-cols-3 gap-10 ">
+          {products.map((product: Product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
       </div>
     </>
   );

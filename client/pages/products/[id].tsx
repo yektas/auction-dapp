@@ -111,21 +111,26 @@ const ProductDetail = ({}: Props) => {
     const minBidAmount = String(Number(priceEth) + 0.01);
 
     return (
-      <div className="container w-1/3 px-4 mx-auto text-white">
-        <div className="text-center bg-gray-800 shadow-2xl card">
-          <figure className="px-10 pt-10">
-            <img src={product.imageLink} className="rounded-xl" />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">{product.name}</h2>
-            <p>{product.description}</p>
-            <div className="divider"></div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="font-medium text-gray-500 text-md">
+      <div className="text-white bg-gray-800 ">
+        <div className="grid grid-cols-3 divide-x-2 divide-gray-700">
+          <div className="col-span-2 py-4 place-self-center">
+            <figure className="px-10 place-self-center ">
+              <img
+                src={product.imageLink}
+                className="w-full h-full place-self-center"
+              />
+            </figure>
+          </div>
+
+          <div className="h-full pt-4 pr-24">
+            <div className="flex flex-col h-full px-10">
+              <h2 className="text-5xl">{product.name}</h2>
+              <p className="mt-10 leading-loose">{product.description}</p>
+              <div className="flex flex-col my-10 ">
+                <p className="pb-2 font-medium text-gray-500 text-md ">
                   Highest Bidder
-                </label>
-                <p className="flex justify-center font-semibold text-white align-center">
+                </p>
+                <p className="flex font-semibold text-white ">
                   {currentOwner && getEllipsisTxt(currentOwner)}
                   <span className="inline-block">
                     {isCopied ? (
@@ -139,29 +144,33 @@ const ProductDetail = ({}: Props) => {
                   </span>
                 </p>
               </div>
+              <div className="flex-1"></div>
 
-              <div className="flex flex-col align-center">
-                <label className="font-medium text-gray-500 text-md">
-                  Minimum bid
-                </label>
-                <p className="font-semibold text-white">{priceEth} ETH</p>
+              <div className="flex justify-between">
+                <div className="flex flex-col ">
+                  <label className="font-medium text-gray-500 text-md">
+                    Minimum bid
+                  </label>
+                  <p className="font-semibold text-white">{priceEth} ETH</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-500 text-md">
+                    Available until
+                  </label>
+                  <p className="font-semibold text-white">{expiringIn}</p>
+                </div>
               </div>
-              <div>
-                <label className="font-medium text-gray-500 text-md">
-                  Available until
-                </label>
-                <p className="font-semibold text-white">{expiringIn}</p>
+              <div className="flex-1"></div>
+              <div className="justify-center pb-12">
+                <button
+                  className="rounded-full btn btn-primary btn-block "
+                  onClick={() => setOpen(true)}
+                >
+                  Bid
+                </button>
               </div>
             </div>
-            <div className="justify-center card-actions">
-              <button
-                className="btn btn-primary modal-button"
-                disabled={product.isSold || isAuctionEnded(product.expireTime)}
-                onClick={() => setOpen(true)}
-              >
-                Bid
-              </button>
-            </div>
+
             <BiddingDialog
               open={open}
               onClose={() => setOpen(false)}
