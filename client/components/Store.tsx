@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import getContract from "../lib/getContract";
-import getWeb3 from "../lib/getWeb3";
-import Web3 from "web3";
-import { Contract } from "web3-eth-contract";
-import { useWeb3React } from "@web3-react/core";
 import ProductCard from "./ProductCard";
-
+import { isAuctionEnded } from "../utils";
+import { getContract } from "../lib/blockchainService";
 export type Product = {
   name: string;
   description: string;
@@ -18,49 +14,50 @@ export type Product = {
 
 type Props = {};
 const Store = ({}: Props) => {
-  const { account } = useWeb3React();
-  const [products, setProducts] = useState([]);
+  const [contract, setContract] = useState<any>(null);
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+  const [endedProducts, setEndedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [owner, setOwner] = useState();
   const [bidAmount, setBidAmount] = useState<number>();
 
   useEffect(() => {
-    fetchProducts();
-    setContractOwner();
-  });
+    if (!contract) {
+      setContractInstance();
+    }
+
+    if (contract) {
+      fetchProducts();
+      setContractOwner();
+    }
+  }, [contract]);
+
+  async function setContractInstance() {
+    setContract(await getContract());
+  }
 
   async function setContractOwner() {
-    const contract = await getContract();
-    setOwner(await contract.methods.owner().call());
+    setOwner(await contract!.methods.owner().call());
   }
 
   async function fetchProducts() {
-    const contract = await getContract();
-    const products = await contract.methods.getProducts().call();
+    if (contract == null) {
+      return;
+    }
+    console.log("contract is not null:  ", contract);
+    const products = await contract!.methods.getProducts().call();
 
-    /*     contract!.events.ProductCreated()
-          .on('data', async () => console.log("Event called"))
-     */
-    setProducts(products);
-  }
-
-  async function addNewProduct() {
-    const contract = await getContract();
-    await contract.methods
-      .addProduct(
-        "Nike Airmax",
-        `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/1024/768`,
-        "test",
-        Web3.utils.toWei("0.01", "ether"),
-        5
-      )
-      .send({
-        from: account,
-      });
-  }
-
-  function isOwner() {
-    return owner == account;
+    let liveProducts: Product[] = [];
+    let endedProducts: Product[] = [];
+    products.forEach((product: Product) => {
+      if (isAuctionEnded(product.expireTime)) {
+        endedProducts.push(product);
+      } else {
+        liveProducts.push(product);
+      }
+    });
+    setLiveProducts(liveProducts);
+    setEndedProducts(endedProducts);
   }
 
   return (
@@ -103,16 +100,18 @@ const Store = ({}: Props) => {
         <h1 className="text-3xl prose-2xl text-white">Live Auctions</h1>
         <div className="divider"></div>
         <div className="grid grid-cols-3 gap-10 ">
-          {products.map((product: Product) => (
-            <ProductCard product={product} />
-          ))}
+          {liveProducts &&
+            liveProducts.map((product: Product) => (
+              <ProductCard product={product} />
+            ))}
         </div>
         <h1 className="my-5 text-3xl prose-2xl text-white">Ended Auctions</h1>
         <div className="divider"></div>
         <div className="grid grid-cols-3 gap-10 ">
-          {products.map((product: Product) => (
-            <ProductCard product={product} />
-          ))}
+          {endedProducts &&
+            endedProducts.map((product: Product) => (
+              <ProductCard product={product} />
+            ))}
         </div>
       </div>
     </>

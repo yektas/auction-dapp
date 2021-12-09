@@ -11,9 +11,6 @@
     "@ethersproject/providers": "^5.5.0",
     "@headlessui/react": "^1.4.2",
     "@tailwindcss/typography": "^0.4.1",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.8",
     "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
@@ -23,6 +20,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "tailwindcss": "^2.2.19",
+    "use-wallet": "^0.13.1",
+    "valtio": "^1.2.7",
     "web3": "^1.6.0"
   },
   "devDependencies": {

@@ -1,18 +1,11 @@
-import { useState } from "react";
 import { ConnectorNames } from "../pages";
-import clsx from "clsx";
 
 type Options = {
   onClick: Function;
   activating: boolean;
-  activatingConnector: any;
 };
 
-const SelectWallet = ({
-  activatingConnector,
-  onClick,
-  activating,
-}: Options) => {
+const SelectWallet = ({ onClick, activating }: Options) => {
   return (
     <div className="bg-gray-800 shadow-lg rounded-2xl ">
       <div className="w-full px-6 pt-2 pb-8 text-center">

@@ -1,4 +1,5 @@
 import React from "react";
+import { Footer } from "./Footer";
 import Navbar from "./Navbar";
 
 interface Props {}
@@ -7,7 +8,8 @@ const Layout = (props: React.PropsWithChildren<Props>) => {
   return (
     <div>
       <Navbar />
-      {props.children}
+      <div className="h-full mb-10">{props.children}</div>
+      <Footer />
     </div>
   );
 };

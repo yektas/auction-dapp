@@ -2,7 +2,8 @@ import React from "react";
 import Web3 from "web3";
 import Link from "next/link";
 import { Product } from "./Store";
-import { BiddingDialog } from "./BiddingDialog";
+import { isAuctionEnded } from "../utils";
+import clsx from "clsx";
 
 interface Props {
   product: Product;
@@ -12,7 +13,7 @@ const ProductCard = ({ product }: Props) => {
   const priceEth = Web3.utils.fromWei(product.price, "ether");
 
   return (
-    <div className="w-full max-w-md p-8 bg-gray-900 border border-gray-700 shadow-xl sm:rounded-2xl">
+    <div className="w-full max-w-md p-8 bg-gray-900 border border-gray-800 shadow sm:rounded-2xl">
       <div className="flex flex-col ">
         <div className="">
           <div className="relative w-full mb-3 h-62">
@@ -48,8 +49,17 @@ const ProductCard = ({ product }: Props) => {
                 <h2 className="mr-auto text-lg text-gray-200 truncate cursor-pointer hover:text-purple-500 ">
                   {product.name}
                 </h2>
-                <div className="flex items-center px-2 py-1 ml-3 text-sm text-white bg-green-400 rounded-lg">
-                  SELLING
+                <div
+                  className={clsx(
+                    {
+                      "flex items-center px-2 py-1 ml-3 text-sm text-white  rounded-lg":
+                        true,
+                    },
+                    { "bg-green-500": !isAuctionEnded(product.expireTime) },
+                    { "bg-red-500": isAuctionEnded(product.expireTime) }
+                  )}
+                >
+                  {isAuctionEnded(product.expireTime) ? "ENDED" : "SELLING"}
                 </div>
               </div>
             </div>

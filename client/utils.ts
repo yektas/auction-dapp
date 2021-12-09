@@ -1,3 +1,11 @@
+export type ExpireInfo = {
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  ended?: boolean;
+};
+
 export default function convertEpochToHumanReadableString(epochTime: number) {
   //const countDownDate = new Date(epochTime).getTime();
   // Get today's date and time
@@ -7,7 +15,7 @@ export default function convertEpochToHumanReadableString(epochTime: number) {
   let distance = Math.floor(epochTime * 1000 - now);
 
   if (distance <= 0) {
-    return "Ended";
+    return <ExpireInfo>{ ended: true };
   }
 
   // Time calculations for days, hours, minutes and seconds
@@ -18,7 +26,7 @@ export default function convertEpochToHumanReadableString(epochTime: number) {
   const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+  return <ExpireInfo>{ days, hours, minutes, seconds, ended: false };
 }
 
 export function isAuctionEnded(expireTime: number): boolean {
