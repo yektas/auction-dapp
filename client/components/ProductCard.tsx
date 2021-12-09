@@ -1,7 +1,7 @@
 import React from "react";
 import Web3 from "web3";
 import Link from "next/link";
-import { Product } from "./Store";
+import { Product } from "./StorePage";
 import { isAuctionEnded } from "../utils";
 import clsx from "clsx";
 

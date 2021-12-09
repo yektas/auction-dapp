@@ -2,9 +2,9 @@ import { Contract } from "web3-eth-contract";
 import { proxy } from "valtio";
 
 interface Store {
-  contract: any;
+  newProductAdded: boolean;
 }
 
-const store = proxy<Store>({ contract: null });
+const store = proxy<Store>({ newProductAdded: false });
 
 export default store;

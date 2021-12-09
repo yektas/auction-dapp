@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { NextPage } from "next";
 import SelectWallet from "../components/SelectWallet";
 import Layout from "../components/Layout";
-import Store from "../components/Store";
+import StorePage from "../components/StorePage";
 import { useWallet } from "use-wallet";
 
 export type ConnectionInfo = {
@@ -23,13 +23,6 @@ const connectorsByName: { [connectorName in ConnectorNames]: any } = {
 const Index: NextPage = () => {
   const wallet = useWallet();
   const activate = (connector: any) => wallet.connect(connector);
-
-  useEffect(() => {
-    /* getDollarsValue().then((res) => {
-      setDollarValue(res.data.rates["ETH"]);
-    }); */
-    //getData();
-  }, []);
 
   const onConnectWallet = async (name: ConnectorNames) => {
     activate(connectorsByName[name]).finally(() => {
@@ -53,7 +46,7 @@ const Index: NextPage = () => {
           </div>
         </div>
       ) : (
-        <Store />
+        <StorePage />
       )}
     </Layout>
   );
