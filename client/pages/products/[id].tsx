@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
 import Layout from "./../../components/Layout";
 import convertEpochToHumanReadableString, {
@@ -15,6 +14,7 @@ import { useSnapshot } from "valtio";
 import { useWallet } from "use-wallet";
 import { getContract, getWeb3 } from "../../lib/blockchainService";
 import clsx from "clsx";
+import { useSpinner } from "../../components/SpinnerContext";
 
 type Product = {
   name: string;
@@ -29,12 +29,11 @@ type Product = {
 type Props = {};
 
 const ProductDetail = ({}: Props) => {
-  const { library } = useWeb3React();
   const wallet = useWallet();
   //const snapshot = useSnapshot(store);
+  const { showSpinner, hideSpinner } = useSpinner();
   const [contract, setContract] = useState<any>(null);
   const [product, setProduct] = useState<Product>();
-  const [loading, setLoading] = useState(false);
   const [currentOwner, setCurrentOwner] = useState();
   const [bidAmount, setBidAmount] = useState<string>("");
   const [expiringIn, setExpiringIn] = useState<ExpireInfo>({
@@ -105,9 +104,18 @@ const ProductDetail = ({}: Props) => {
   };
 
   async function claimProduct() {
-    await contract!.methods.claimProduct(product!.id).send({
-      from: wallet.account,
-    });
+    showSpinner();
+    await contract!.methods
+      .claimProduct(product!.id)
+      .send({
+        from: wallet.account,
+      })
+      .then(() => {
+        hideSpinner();
+      })
+      .catch(() => {
+        hideSpinner();
+      });
   }
 
   async function setAccountBalance() {
@@ -117,6 +125,8 @@ const ProductDetail = ({}: Props) => {
   }
 
   async function fetchProduct(productId: string | string[]): Promise<Product> {
+    showSpinner();
+
     const product = await contract!.methods.getProduct(productId).call();
     setProduct(product);
     const priceEth = Web3.utils.fromWei(product.price, "ether");
@@ -124,19 +134,34 @@ const ProductDetail = ({}: Props) => {
 
     return new Promise<Product>((resolve) => {
       resolve(product);
+      hideSpinner();
     });
   }
 
   async function placeBid(bidAmount: string) {
+    showSpinner();
+
     if (bidAmount <= product!.price) {
+      hideSpinner();
+      alert("Bid amount must be greater than min bid amount");
+      return;
     }
 
-    const result = await contract!.methods.bid(product!.id).send({
-      from: wallet.account,
-      value: Web3.utils.toWei(bidAmount, "ether"),
-    });
-
-    setOpen(result && !result.status);
+    contract!.methods
+      .bid(product!.id)
+      .send({
+        from: wallet.account,
+        value: Web3.utils.toWei(bidAmount, "ether"),
+      })
+      .then((res: any) => {
+        if (res) {
+          setOpen(!res.status);
+          hideSpinner();
+        }
+      })
+      .catch(() => {
+        hideSpinner();
+      });
   }
 
   function renderCountdown() {

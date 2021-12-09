@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import type { NextPage } from "next";
 import SelectWallet from "../components/SelectWallet";
-import store from "../Store";
-import { useSnapshot } from "valtio";
 import Layout from "../components/Layout";
 import Store from "../components/Store";
 import { useWallet } from "use-wallet";
+
+export type ConnectionInfo = {
+  connector: "injected" | "walletconnect";
+  connected: boolean;
+};
 
 export enum ConnectorNames {
   Metamask = "Metamask",
@@ -14,10 +17,10 @@ export enum ConnectorNames {
 
 const connectorsByName: { [connectorName in ConnectorNames]: any } = {
   [ConnectorNames.Metamask]: "injected",
-  [ConnectorNames.WalletConnect]: "frame",
+  [ConnectorNames.WalletConnect]: "walletconnect",
 };
 
-const Home: NextPage = () => {
+const Index: NextPage = () => {
   const wallet = useWallet();
   const activate = (connector: any) => wallet.connect(connector);
 
@@ -29,22 +32,24 @@ const Home: NextPage = () => {
   }, []);
 
   const onConnectWallet = async (name: ConnectorNames) => {
-    activate(connectorsByName[name]);
-    localStorage.setItem("connected", "1");
+    activate(connectorsByName[name]).finally(() => {
+      const connectionInfo: ConnectionInfo = {
+        connector: connectorsByName[name],
+        connected: true,
+      };
+      localStorage.setItem("ConnectionInfo", JSON.stringify(connectionInfo));
+    });
   };
 
   return (
     <Layout>
       {!wallet.isConnected() ? (
         <div className="container flex flex-col items-center justify-center px-6 py-16 mx-auto md:px-12 xl:py-24">
-          <h1 className="mb-4 text-5xl font-extrabold leading-tight text-center text-gray-800 sm:text-6xl">
+          <h1 className="mb-4 text-5xl font-extrabold leading-tight text-center text-white sm:text-6xl">
             Welcome to Auction
           </h1>
           <div className="w-2/5 h-screen m-auto mt-4">
-            <SelectWallet
-              activating={wallet.status == "connecting"}
-              onClick={onConnectWallet}
-            />
+            <SelectWallet onClick={onConnectWallet} />
           </div>
         </div>
       ) : (
@@ -54,4 +59,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Index;

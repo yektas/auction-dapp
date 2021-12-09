@@ -13,7 +13,7 @@ const ProductCard = ({ product }: Props) => {
   const priceEth = Web3.utils.fromWei(product.price, "ether");
 
   return (
-    <div className="w-full max-w-md p-8 bg-gray-900 border border-gray-800 shadow sm:rounded-2xl">
+    <div className="w-full max-w-md p-8 bg-gray-900 border-2 border-gray-600 shadow sm:rounded-2xl">
       <div className="flex flex-col ">
         <div className="">
           <div className="relative w-full mb-3 h-62">

@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
 import { getEllipsisTxt } from "../utils";
 import { NewProductDialog } from "./NewProductDialog";
-import store from "../Store";
-import { useSnapshot } from "valtio";
 import { useWallet } from "use-wallet";
 import { getContract } from "../lib/blockchainService";
+import { useRouter } from "next/router";
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const {} = useWeb3React();
-  const snapshot = useSnapshot(store);
+  const router = useRouter();
   const wallet = useWallet();
   const [isOwner, setIsOwner] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,6 +30,8 @@ const Navbar = (props: Props) => {
 
   const disconnect = () => {
     wallet.reset();
+    localStorage.removeItem("ConnectionInfo");
+    router.push("/");
   };
 
   function onNewProduct() {

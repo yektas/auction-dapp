@@ -19,6 +19,8 @@
     "postcss": "^8.3.11",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-loadingg": "^1.8.0-alpha.2",
+    "react-spinners": "^0.11.0",
     "tailwindcss": "^2.2.19",
     "use-wallet": "^0.13.1",
     "valtio": "^1.2.7",

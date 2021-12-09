@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { UseWalletProvider } from "use-wallet";
 import MetamaskProvider from "../MetamaskProvider";
+import { SpinnerProvider } from "../components/SpinnerContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,14 +12,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           //allows you to connect and switch between mainnet and rinkeby within Metamask.
           chainId: [1, 3, 4, 5, 42, 1337],
         },
-        // walletconnect: {
-        //   chainId: [1],
-        //   rpcUrl: "https://mainnet.eth.aragon.network/",
-        // },
+        walletconnect: {
+          rpc: { 5777: "http://192.168.1.99:7545" },
+        },
       }}
     >
       <MetamaskProvider>
-        <Component {...pageProps} />
+        <SpinnerProvider>
+          <Component {...pageProps} />
+        </SpinnerProvider>
       </MetamaskProvider>
     </UseWalletProvider>
   );

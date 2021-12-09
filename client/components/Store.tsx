@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { isAuctionEnded } from "../utils";
 import { getContract } from "../lib/blockchainService";
+import { useSpinner } from "./SpinnerContext";
 export type Product = {
   name: string;
   description: string;
@@ -14,14 +15,16 @@ export type Product = {
 
 type Props = {};
 const Store = ({}: Props) => {
+  const { showSpinner, hideSpinner } = useSpinner();
+
   const [contract, setContract] = useState<any>(null);
   const [liveProducts, setLiveProducts] = useState<Product[]>([]);
   const [endedProducts, setEndedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
   const [owner, setOwner] = useState();
   const [bidAmount, setBidAmount] = useState<number>();
 
   useEffect(() => {
+    showSpinner();
     if (!contract) {
       setContractInstance();
     }
@@ -29,6 +32,7 @@ const Store = ({}: Props) => {
     if (contract) {
       fetchProducts();
       setContractOwner();
+      hideSpinner();
     }
   }, [contract]);
 
@@ -44,7 +48,6 @@ const Store = ({}: Props) => {
     if (contract == null) {
       return;
     }
-    console.log("contract is not null:  ", contract);
     const products = await contract!.methods.getProducts().call();
 
     let liveProducts: Product[] = [];

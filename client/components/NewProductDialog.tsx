@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import Web3 from "web3";
 import { useWallet } from "use-wallet";
 import { getContract } from "../lib/blockchainService";
+import { useSpinner } from "./SpinnerContext";
 
 interface Props {
   open: boolean;
@@ -18,6 +19,7 @@ interface ProductForm {
 
 export const NewProductDialog = ({ open, onClose }: Props) => {
   const wallet = useWallet();
+  const { showSpinner, hideSpinner } = useSpinner();
   const [inputs, setInputs] = useState<Partial<ProductForm>>({
     name: "",
     description: "",
@@ -35,6 +37,7 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    showSpinner();
     const contract = await getContract();
     const estimatedGas = await contract!.methods
       .addProduct(
@@ -58,6 +61,9 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
         from: wallet.account,
         gasPrice: estimatedGas,
       });
+
+    hideSpinner();
+
     if (result.status) {
       onClose();
     }
