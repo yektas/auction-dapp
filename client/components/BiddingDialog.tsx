@@ -69,7 +69,7 @@ export const BiddingDialog = ({
                       setBidAmount(String(event.target.value))
                     }
                     step="0.01"
-                    className="w-full input input-lg focus:ring-0"
+                    className="w-full input bg-gray-800 input-lg focus:ring-0"
                   />
                   <span className="text-xl text-white bg-primary ">ETH</span>
                 </label>

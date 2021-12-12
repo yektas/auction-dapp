@@ -140,8 +140,9 @@ const ProductDetail = ({}: Props) => {
 
   async function placeBid(bidAmount: string) {
     showSpinner();
-
-    if (bidAmount <= product!.price) {
+    console.log(product!.price);
+    console.log(Web3.utils.toWei(bidAmount, "ether"));
+    if (Web3.utils.toWei(bidAmount, "ether") <= product!.price) {
       hideSpinner();
       alert("Bid amount must be greater than min bid amount");
       return;
@@ -171,27 +172,27 @@ const ProductDetail = ({}: Props) => {
     let secondsValue: any = { "--value": expiringIn.seconds };
 
     return (
-      <div className="grid grid-flow-col gap-5 mt-2 place-items-end auto-cols-max">
+      <div className='grid grid-flow-col gap-5 mt-2 place-items-end auto-cols-max'>
         <div>
-          <span className="font-mono text-4xl countdown">
+          <span className='font-mono text-3xl countdown'>
             <span style={daysValue}></span>
           </span>
           days
         </div>
         <div>
-          <span className="font-mono text-4xl countdown">
+          <span className='font-mono text-3xl countdown'>
             <span style={hoursValue}></span>
           </span>
           hours
         </div>
         <div>
-          <span className="font-mono text-4xl countdown">
+          <span className='font-mono text-3xl countdown'>
             <span style={minutesValue}></span>
           </span>
           min
         </div>
         <div>
-          <span className="font-mono text-4xl countdown">
+          <span className='font-mono text-3xl countdown'>
             <span style={secondsValue}></span>
           </span>
           sec
@@ -205,37 +206,39 @@ const ProductDetail = ({}: Props) => {
     const minBidAmount = String(Number(priceEth) + 0.01);
 
     return (
-      <div className="text-white bg-gray-900 ">
-        <div className="grid grid-cols-3 divide-x-2 divide-gray-700">
-          <div className="col-span-2 py-4 place-self-center">
-            <figure className="px-10 place-self-center ">
+      <div className='text-white bg-gray-900'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 lg:divide-x-2 lg:divide-gray-700'>
+          <div className='col-span-2 py-4 place-self-center'>
+            <figure className='px-10 place-self-center '>
               <img
                 src={product.imageLink}
-                className="w-full h-full place-self-center"
+                className='w-full h-full place-self-center'
               />
             </figure>
           </div>
 
-          <div className="h-full pt-4 pr-24">
-            <div className="flex flex-col h-full px-10">
-              <h2 className="text-5xl">
+          <div className='h-full pt-4 px-6 lg:pr-18'>
+            <div className='flex flex-col h-full px-10'>
+              <h2 className='text-2xl'>
                 {product.name}{" "}
                 {isOwnedByAccount() && (
-                  <span className="self-center justify-center badge badge-secondary badge-outline">
+                  <span className='self-center justify-center badge badge-secondary badge-outline'>
                     You own it!
                   </span>
                 )}
               </h2>
-              <p className="mt-10 leading-loose">{product.description}</p>
+              <p className='text-sm text-gray-300 lg:text-base mt-10 leading-loose'>
+                {product.description}
+              </p>
 
-              <div className="flex justify-between mt-10 ">
-                <div className="flex flex-col ">
-                  <p className="pb-2 font-medium text-gray-500 text-md ">
+              <div className='flex justify-between mt-4 lg:mt-10 '>
+                <div className='flex flex-col '>
+                  <p className='pb-2 font-medium text-gray-500 text-md '>
                     Highest Bidder
                   </p>
-                  <p className="flex font-semibold text-white ">
+                  <p className='flex font-semibold text-white '>
                     {currentOwner && getEllipsisTxt(currentOwner)}
-                    <span className="inline-block">
+                    <span className='inline-block'>
                       {isCopied ? (
                         <Check />
                       ) : (
@@ -248,22 +251,22 @@ const ProductDetail = ({}: Props) => {
                   </p>
                 </div>
               </div>
-              <div className="flex-1"></div>
-              <div className="flex flex-col ">
-                <label className="pb-2 font-medium text-gray-500 text-md">
+              <div className='flex-1'></div>
+              <div className='flex flex-col mt-2'>
+                <label className='pb-2 font-medium text-gray-500 text-md'>
                   Minimum bid
                 </label>
-                <p className="font-semibold text-white">{priceEth} ETH</p>
+                <p className='font-semibold text-white'>{priceEth} ETH</p>
               </div>
-              <div className="flex-1"></div>
-              <div>
-                <label className="pb-2 font-medium text-gray-500 text-md">
+              <div className='flex-1'></div>
+              <div className='my-4'>
+                <label className='pb-2 font-medium text-gray-500 text-md'>
                   Available until
                 </label>
                 {renderCountdown()}
               </div>
-              <div className="flex-1"></div>
-              <div className="flex justify-around pb-12">
+              <div className='flex-1'></div>
+              <div className='flex justify-around pb-12'>
                 <button
                   className={clsx("rounded-full btn btn-primary mx-2", {
                     "btn-block ": !showClaimButton(),
@@ -277,7 +280,7 @@ const ProductDetail = ({}: Props) => {
 
                 {showClaimButton() && (
                   <button
-                    className="flex-auto w-full mx-2 rounded-full btn btn-secondary"
+                    className='flex-auto w-full mx-2 rounded-full btn btn-secondary'
                     onClick={() => claimProduct()}
                   >
                     Claim your product

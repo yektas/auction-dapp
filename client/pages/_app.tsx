@@ -13,7 +13,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           chainId: [1, 3, 4, 5, 42, 1337],
         },
         walletconnect: {
-          rpc: { 5777: "http://192.168.1.99:7545" },
+          rpc: {
+            3: process.env.ROPSTEN_RPC_URL,
+            5777: "http://192.168.1.99:7545",
+          },
         },
       }}
     >

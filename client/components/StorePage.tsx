@@ -80,12 +80,12 @@ const StorePage = ({}: Props) => {
                 Best products are here!
               </h1>
 
-              <hr className="w-12 h-1 mt-8 bg-orange-500 rounded-full " />
+              <hr className="w-1/3 h-1 mt-8 bg-orange-500 border-orange-500 rounded-full " />
               <p className="mt-8 text-base font-semibold leading-relaxed text-white ">
                 You can find your favorite products with a really good prices
               </p>
               <div className="flex justify-center mt-10 space-x-5 get-app md:justify-start">
-                <button className="btn btn-primary">Browse Now</button>
+                <button className="btn btn-primary">Shop Now</button>
               </div>
             </div>
 

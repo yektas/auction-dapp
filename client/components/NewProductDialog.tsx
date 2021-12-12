@@ -13,6 +13,7 @@ interface Props {
 interface ProductForm {
   name: string;
   description: string;
+  imageUrl: string;
   expireTime?: number;
   price?: number;
 }
@@ -23,6 +24,7 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
   const [inputs, setInputs] = useState<Partial<ProductForm>>({
     name: "",
     description: "",
+    imageUrl: "",
   });
   const handleChange = useCallback(
     ({ target }) =>
@@ -42,17 +44,17 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
     const estimatedGas = await contract!.methods
       .addProduct(
         inputs.name,
-        `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/1024/768`,
+        inputs.imageUrl,
         inputs.description,
         Web3.utils.toWei(inputs.price!.toString(), "ether"),
         inputs.expireTime
       )
-      .estimateGas();
+      .estimateGas({ from: wallet.account });
 
-    const result = await contract!.methods
+    contract!.methods
       .addProduct(
         inputs.name,
-        `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/1024/768`,
+        inputs.imageUrl,
         inputs.description,
         Web3.utils.toWei(inputs.price!.toString(), "ether"),
         inputs.expireTime
@@ -60,19 +62,19 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
       .send({
         from: wallet.account,
         gasPrice: estimatedGas,
-      });
-
-    hideSpinner();
-
-    if (result.status) {
-      onClose();
-    }
+      })
+      .then((result: any) => {
+        if (result.status) {
+          onClose();
+        }
+      })
+      .finally(() => hideSpinner());
   };
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-10 overflow-y-aut"
+        className="fixed inset-0 z-10 overflow-y-auto"
         onClose={onClose}
       >
         <div className="min-h-screen px-4 text-center">
@@ -112,11 +114,11 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
                     name="name"
                     onChange={handleChange}
                     value={inputs.name}
-                    className="input input-bordered"
+                    className="input input-bordered bg-gray-800"
                   />
                 </div>
 
-                <div className="form-control">
+                <div className="mt-2 form-control">
                   <label className="label">
                     <span className="text-gray-500 text-md">Description</span>
                   </label>
@@ -125,11 +127,25 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
                     name="description"
                     onChange={handleChange}
                     value={inputs.description}
-                    className="h-24 textarea"
+                    className="h-24 textarea input-bordered bg-gray-800"
                   ></textarea>
                 </div>
 
-                <div className="form-control">
+                <div className="mt-2 form-control">
+                  <label className="label">
+                    <span className="text-gray-500 text-md">Image URL</span>
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="imageUrl"
+                    onChange={handleChange}
+                    value={inputs.imageUrl}
+                    className="input input-bordered bg-gray-800"
+                  />
+                </div>
+
+                <div className="mt-2 form-control">
                   <label className="label">
                     <span className="text-gray-500 text-md">Auction Time</span>
                   </label>
@@ -142,11 +158,11 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
                     onChange={handleChange}
                     value={inputs.expireTime}
                     placeholder="in minutes (max 6 hours)"
-                    className="input input-bordered"
+                    className="input input-bordered bg-gray-800"
                   />
                 </div>
 
-                <div className="form-control">
+                <div className="mt-2 form-control">
                   <label className="label">
                     <span className="text-gray-500 label-text">Price</span>
                   </label>
@@ -157,8 +173,8 @@ export const NewProductDialog = ({ open, onClose }: Props) => {
                       onChange={handleChange}
                       name="price"
                       value={inputs.price}
-                      step="0.01"
-                      className="w-full border-none input input-lg focus:ring-0"
+                      step="0.001"
+                      className="w-full input input-lg focus:ring-0 bg-gray-800"
                     />
                     <span className="text-xl text-white bg-primary ">ETH</span>
                   </label>

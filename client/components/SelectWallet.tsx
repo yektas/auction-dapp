@@ -10,7 +10,7 @@ const SelectWallet = ({ onClick }: Options) => {
       <div className="w-full px-6 pt-2 pb-8 text-center">
         <div className="flex flex-row justify-between w-full mb-2">
           <div className="py-6 text-2xl text-white ">
-            <h4>Connect to a wallet</h4>
+            <h4>Connect your wallet with:</h4>
           </div>
         </div>
         <div className="flex justify-between mt-5 align-center">
