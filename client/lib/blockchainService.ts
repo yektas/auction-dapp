@@ -4,6 +4,8 @@ import contractJson from "../../build/contracts/Auction.json";
 
 let web3Instance: Web3;
 
+const CONTRACT_ADRESS = "0x701F8f09FD8Ab9c585afFC269726a53Ad57aE61B";
+
 const check = async (): Promise<Web3> => {
   const w = window as unknown as Window & { ethereum: any; web3: Web3 };
 
@@ -53,7 +55,7 @@ let getContract = function () {
     resolve(
       new web3Instance!.eth.Contract(
         contractJson.abi as AbiItem[],
-        process.env.NEXT_PUBLIC_AUCTION_ADDRESS
+        process.env.NEXT_PUBLIC_AUCTION_ADDRESS || CONTRACT_ADRESS
       )
     );
   });
